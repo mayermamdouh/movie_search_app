@@ -60,10 +60,11 @@ export default function SearchBar() {
     searchMovies();
   }, [debouncedSearch, searchMovies]);
 
+  // Close mobile search panel when navigating to another route
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
-
+  // Automatically close mobile menu if window resized to desktop view
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768 && search.trim()) {

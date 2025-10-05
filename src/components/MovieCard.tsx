@@ -20,7 +20,7 @@ export const MovieCard = React.memo(({ movie }: { movie: Movie }) => {
         />
 
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-5">
-          <div className="absolute inset-0 bg-black/25 rounded-3xl"></div>
+          <div className="absolute inset-0 bg-black/10 rounded-3xl"></div>
           <h1 className="relative text-sm md:text-base font-bold drop-shadow-md">
             {movie.Title || "No title"}
           </h1>

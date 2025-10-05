@@ -119,7 +119,7 @@ export default function MovieDetails() {
         <img
           src={movie.Poster}
           alt={movie.Title || "No title"}
-          className="w-full md:w-[30%] rounded-2xl shadow-xl flex-shrink-0"
+          className="w-full md:w-[30%] h-[450px]  md:h-[600px] object-cover rounded-2xl shadow-xl flex-shrink-0"
           width={400}
           height={600}
           loading="lazy"
