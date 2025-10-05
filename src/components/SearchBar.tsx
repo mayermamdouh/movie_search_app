@@ -13,7 +13,7 @@ export default function SearchBar() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const debouncedSearch = useDebounce(search, 500);
   const location = useLocation();
 
@@ -63,9 +63,16 @@ export default function SearchBar() {
   // Close mobile search panel when navigating to another route
   useEffect(() => {
     setMobileOpen(false);
+    setDropdownOpen(false);
   }, [location.pathname]);
   // Automatically close mobile menu if window resized to desktop view
   useEffect(() => {
+    if (search.trim()) {
+      setDropdownOpen(true);
+    } else {
+      setDropdownOpen(false);
+    }
+
     const handleResize = () => {
       if (window.innerWidth >= 768 && search.trim()) {
         setMobileOpen(false);
@@ -122,7 +129,7 @@ export default function SearchBar() {
         />
       )}
 
-      {search && !mobileOpen && (
+      {search && dropdownOpen && !mobileOpen && (
         <div className="hidden md:block absolute mt-2 left-0 w-full bg-background border  rounded-lg max-h-[50vh] overflow-y-auto z-50 invisible-scrollbar border-secondary">
           {loading ? (
             <div className="p-2 text-center my-10">
