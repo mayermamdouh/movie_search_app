@@ -168,7 +168,7 @@ const SearchMobile = ({
       ${mobileOpen ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0"}
     `}
       >
-        <div className="w-full relative mb-4">
+        <div className="w-full relative">
           <SearchInput search={search} setSearch={setSearch} />
           <FaTimes
             className="absolute right-3 top-1/2 -translate-y-1/2 text-white cursor-pointer text-lg"
@@ -226,7 +226,7 @@ const SearchInput = ({
       value={search}
       onChange={(e) => setSearch(e.target.value)}
       placeholder="Search movies..."
-      className="w-full p-2 rounded-lg border border-secondary outline-none bg-background text-white"
+      className="w-full py-1.5 px-2 rounded-lg border border-secondary outline-none bg-background text-white"
     />
   );
 };
