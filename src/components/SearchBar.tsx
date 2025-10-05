@@ -13,7 +13,6 @@ export default function SearchBar() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [desktopOpen, setDesktopOpen] = useState(false);
 
   const debouncedSearch = useDebounce(search, 500);
   const location = useLocation();
@@ -50,7 +49,8 @@ export default function SearchBar() {
       const message =
         err instanceof Error ? err.message : "Something went wrong";
       setError(message);
-      if (message !== "No results found") toast.error(message);
+      if (message !== "No results found" && message !== "Movie not found!")
+        toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -62,8 +62,17 @@ export default function SearchBar() {
 
   useEffect(() => {
     setMobileOpen(false);
-    setDesktopOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && search.trim()) {
+        setMobileOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [search]);
 
   const handleCloseSearch = () => {
     setSearch("");
@@ -79,7 +88,6 @@ export default function SearchBar() {
   };
 
   const handleMobileOpen = () => setMobileOpen(true);
-  const handleDesktopFocus = () => setDesktopOpen(true);
 
   return (
     <div className="relative">
@@ -93,11 +101,7 @@ export default function SearchBar() {
           ) : (
             <FaSearch className="absolute right-3 text-secondary" />
           )}
-          <SearchInput
-            search={search}
-            setSearch={setSearch}
-            onFocus={handleDesktopFocus}
-          />
+          <SearchInput search={search} setSearch={setSearch} />
         </div>
       </div>
 
@@ -117,8 +121,8 @@ export default function SearchBar() {
         />
       )}
 
-      {search && desktopOpen && !mobileOpen && (
-        <div className="hidden md:block absolute mt-2 left-0 w-full bg-background border border-secondary rounded-lg max-h-[50vh] overflow-y-auto z-50 invisible-scrollbar">
+      {search && !mobileOpen && (
+        <div className="hidden md:block absolute mt-2 left-0 w-full bg-background border  rounded-lg max-h-[50vh] overflow-y-auto z-50 invisible-scrollbar border-secondary">
           {loading ? (
             <div className="p-2 text-center my-10">
               <CircleLoader />
@@ -168,7 +172,7 @@ const SearchMobile = ({
   movies: Movie[];
 }) => {
   return (
-    <div className="fixed inset-0 z-50 block md:hidden pointer-events-none bg-background overscroll-none touch-none">
+    <div className="fixed inset-0 z-50 block md:hidden pointer-events-none bg-background overscroll-none touch-none ">
       <div
         className={`
           absolute top-0 left-0 right-0 bg-background p-4 overflow-y-auto 
@@ -180,12 +184,12 @@ const SearchMobile = ({
         <div className="w-full relative">
           <SearchInput search={search} setSearch={setSearch} />
           <FaTimes
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-white cursor-pointer text-lg"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-white cursor-pointer text-lg "
             onClick={handleCloseMobileSearch}
           />
         </div>
 
-        <div className="space-y-2 max-h-[60vh] overflow-y-auto invisible-scrollbar">
+        <div className="space-y-2 max-h-[60vh] overflow-y-auto invisible-scrollbar ">
           {loading ? (
             <div className="flex justify-center my-10">
               <CircleLoader />
