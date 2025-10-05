@@ -1,7 +1,8 @@
 import { Link } from "react-router";
 import type { Movie } from "../api/movieAPI";
+import React from "react";
 
-export default function MovieCard({ movie }: { movie: Movie }) {
+export const MovieCard = React.memo(({ movie }: { movie: Movie }) => {
   return (
     <Link to={`/movie/${movie.imdbID}`}>
       <div
@@ -29,4 +30,4 @@ export default function MovieCard({ movie }: { movie: Movie }) {
       </div>
     </Link>
   );
-}
+});

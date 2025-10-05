@@ -1,5 +1,5 @@
 import type { Movie } from "../api/movieAPI";
-import MovieCard from "./MovieCard";
+import { MovieCard } from "./MovieCard";
 
 export default function MovieList({ movies }: { movies: Movie[] }) {
   if (!movies || movies.length === 0) {

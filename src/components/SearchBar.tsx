@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Movie } from "../api/movieAPI";
 import { fetchMovies } from "../api/movieAPI";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { toast } from "sonner";
 import CircleLoader from "./CircleLoader";
@@ -12,8 +12,11 @@ export default function SearchBar() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktopOpen, setDesktopOpen] = useState(false);
+
   const debouncedSearch = useDebounce(search, 500);
+  const location = useLocation();
 
   useEffect(() => {
     const savedSearch = sessionStorage.getItem("searchQuery");
@@ -34,7 +37,7 @@ export default function SearchBar() {
     setError(null);
 
     try {
-      const results = await fetchMovies(debouncedSearch);
+      const results = await fetchMovies(debouncedSearch.trim());
       if (!results || results.length === 0) {
         setMovies([]);
         setError("No results found");
@@ -47,9 +50,7 @@ export default function SearchBar() {
       const message =
         err instanceof Error ? err.message : "Something went wrong";
       setError(message);
-      if (message !== "No results found") {
-        toast.error(message);
-      }
+      if (message !== "No results found") toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -58,6 +59,11 @@ export default function SearchBar() {
   useEffect(() => {
     searchMovies();
   }, [debouncedSearch, searchMovies]);
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setDesktopOpen(false);
+  }, [location.pathname]);
 
   const handleCloseSearch = () => {
     setSearch("");
@@ -72,10 +78,13 @@ export default function SearchBar() {
     handleCloseSearch();
   };
 
+  const handleMobileOpen = () => setMobileOpen(true);
+  const handleDesktopFocus = () => setDesktopOpen(true);
+
   return (
     <div className="relative">
       <div className="hidden md:block">
-        <div className="relative flex items-center ">
+        <div className="relative flex items-center">
           {search ? (
             <FaTimes
               className="absolute right-3 text-secondary cursor-pointer"
@@ -84,11 +93,15 @@ export default function SearchBar() {
           ) : (
             <FaSearch className="absolute right-3 text-secondary" />
           )}
-          <SearchInput search={search} setSearch={setSearch} />
+          <SearchInput
+            search={search}
+            setSearch={setSearch}
+            onFocus={handleDesktopFocus}
+          />
         </div>
       </div>
 
-      <div className="block md:hidden" onClick={() => setMobileOpen(true)}>
+      <div className="block md:hidden" onClick={handleMobileOpen}>
         <FaSearch className="text-white ml-auto text-lg cursor-pointer" />
       </div>
 
@@ -104,7 +117,7 @@ export default function SearchBar() {
         />
       )}
 
-      {search && !mobileOpen && (
+      {search && desktopOpen && !mobileOpen && (
         <div className="hidden md:block absolute mt-2 left-0 w-full bg-background border border-secondary rounded-lg max-h-[50vh] overflow-y-auto z-50 invisible-scrollbar">
           {loading ? (
             <div className="p-2 text-center my-10">
@@ -114,11 +127,7 @@ export default function SearchBar() {
             <div className="p-2 text-center text-white">{error}</div>
           ) : movies.length > 0 ? (
             movies.map((movie) => (
-              <Link
-                key={movie.imdbID}
-                to={`/movie/${movie.imdbID}`}
-                onClick={handleCloseSearch}
-              >
+              <Link key={movie.imdbID} to={`/movie/${movie.imdbID}`}>
                 <div className="flex items-center p-3 cursor-pointer hover:bg-gray-800">
                   <img
                     src={movie.Poster || "/placeholder.png"}
@@ -162,11 +171,11 @@ const SearchMobile = ({
     <div className="fixed inset-0 z-50 block md:hidden pointer-events-none">
       <div
         className={`
-      absolute top-0 left-0 right-0 bg-background p-4 overflow-y-auto 
-      transform transition-transform duration-500 ease-in-out 
-      rounded-b-2xl shadow-2xl
-      ${mobileOpen ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0"}
-    `}
+          absolute top-0 left-0 right-0 bg-background p-4 overflow-y-auto 
+          transform transition-transform duration-500 ease-in-out 
+          rounded-b-2xl shadow-2xl
+          ${mobileOpen ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0"}
+        `}
       >
         <div className="w-full relative">
           <SearchInput search={search} setSearch={setSearch} />
@@ -185,11 +194,7 @@ const SearchMobile = ({
             <div className="text-center text-white py-4">{error}</div>
           ) : movies.length > 0 ? (
             movies.map((movie) => (
-              <Link
-                key={movie.imdbID}
-                to={`/movie/${movie.imdbID}`}
-                onClick={handleCloseMobileSearch}
-              >
+              <Link key={movie.imdbID} to={`/movie/${movie.imdbID}`}>
                 <div className="flex items-center p-3 cursor-pointer hover:bg-gray-800 rounded-lg transition-colors">
                   <img
                     src={movie.Poster || "/placeholder.png"}
@@ -216,17 +221,20 @@ const SearchMobile = ({
 const SearchInput = ({
   search,
   setSearch,
+  onFocus,
 }: {
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
+  onFocus?: () => void;
 }) => {
   return (
     <input
       type="text"
       value={search}
       onChange={(e) => setSearch(e.target.value)}
+      onFocus={onFocus}
       placeholder="Search movies..."
-      className="w-full py-1.5 px-2 rounded-lg border border-secondary outline-none bg-background text-white"
+      className="w-full py-1.5 px-2 pr-10 rounded-lg border border-secondary outline-none bg-background text-white overflow-x-auto whitespace-nowrap"
     />
   );
 };
