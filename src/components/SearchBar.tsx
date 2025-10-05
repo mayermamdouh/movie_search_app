@@ -168,7 +168,7 @@ const SearchMobile = ({
   movies: Movie[];
 }) => {
   return (
-    <div className="fixed inset-0 z-50 block md:hidden pointer-events-none">
+    <div className="fixed inset-0 z-50 block md:hidden pointer-events-none bg-background overscroll-none touch-none">
       <div
         className={`
           absolute top-0 left-0 right-0 bg-background p-4 overflow-y-auto 

@@ -1,8 +1,7 @@
-import { lazy } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const SearchBar = lazy(() => import("./SearchBar"));
+import SearchBar from "./SearchBar";
 
 export default function Header() {
   const location = useLocation();

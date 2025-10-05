@@ -111,15 +111,18 @@ export default function MovieDetails() {
       <div
         className="absolute inset-0 bg-black/50 z-0 blur-xs bg-cover bg-center"
         style={{
-          backgroundImage: `url(${movie.Poster?.replace("SX300", "SX1500")})`,
+          backgroundImage: `url(${movie.Poster?.replace("SX300", "SX600")})`,
         }}
       />
       <div className="absolute inset-0 bg-black/20"></div>
       <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center max-w-6xl mx-auto p-6 gap-6 ">
         <img
-          src={movie.Poster?.replace("SX300", "SX600")}
+          src={movie.Poster}
           alt={movie.Title || "No title"}
           className="w-full md:w-[30%] rounded-2xl shadow-xl flex-shrink-0"
+          width={400}
+          height={600}
+          loading="lazy"
         />
 
         <div className="w-full md:w-[70%] bg-gray-900/70 rounded-2xl p-4 flex flex-col gap-3 shadow-md">

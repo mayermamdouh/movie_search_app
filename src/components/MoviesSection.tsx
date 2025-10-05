@@ -12,7 +12,7 @@ export interface CategoryState {
   error: string | null;
 }
 
-export default function MoviesPage() {
+export default function MoviesSection() {
   const [moviesByCategory, setMoviesByCategory] = useState<
     Record<string, CategoryState>
   >({});

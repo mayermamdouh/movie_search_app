@@ -1,6 +1,6 @@
 import CircleLoader from "./CircleLoader";
 import MovieList from "./MovieList";
-import type { CategoryState } from "./Movies";
+import type { CategoryState } from "./MoviesSection";
 
 export function CategorySection({
   category,

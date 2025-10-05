@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import BannerSection from "../components/BannerSection";
 import { fetchMovies, type Movie } from "../api/movieAPI";
-import MoviesPage from "../components/Movies";
+
+import MoviesSection from "../components/MoviesSection";
 
 export default function Home() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -22,7 +23,7 @@ export default function Home() {
   return (
     <div className="overflow-x-hidden">
       <BannerSection movies={movies} />
-      <MoviesPage />
+      <MoviesSection />
     </div>
   );
 }

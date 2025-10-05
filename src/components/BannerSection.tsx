@@ -12,7 +12,7 @@ export default function BannerSection({ movies }: { movies: Movie[] }) {
   if (!movies || movies.length === 0) return null;
 
   return (
-    <section className="relative w-full h-[50vh] md:h-[70vh] overflow-hidden">
+    <section className="relative w-full h-[50vh] md:h-[70vh] overflow-hidden min-h-[400px]">
       <Carousel className="w-full">
         <CarouselContent className="h-[50vh] md:h-[70vh]">
           {movies.map((movie, index) => (
@@ -23,10 +23,11 @@ export default function BannerSection({ movies }: { movies: Movie[] }) {
               }`}
             >
               <img
-                src={movie.Poster?.replace("SX300", "SX1500")}
+                src={movie.Poster?.replace("SX300", "SX1300")}
                 alt={movie.Title || "No title"}
                 className="w-full h-full object-cover"
-                loading="lazy"
+                width={1300}
+                height={700}
               />
 
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-5">
